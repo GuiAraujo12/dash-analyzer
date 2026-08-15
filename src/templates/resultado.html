@@ -1,0 +1,10 @@
+{% extends 'base.html'  %}
+{% block conteudo %}
+    <h1>Resultados</h1>
+    <p>
+        Total linhas: {{ resultado.total_linhas }}<br/>
+        Total Colunas: {{ resultado.total_colunas }}<br/>
+        Valores Nulos: {{ resultado.valores_nulos }}<br/>
+        Linhas Duplicadas: {{ resultado.valores_duplicados }}<br/>
+    </p>
+{% endblock %}

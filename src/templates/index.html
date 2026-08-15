@@ -1,0 +1,10 @@
+{% extends 'base.html'  %}
+
+{% block conteudo %}
+<h1>Envie um CSV e receba uma análise visual e textual dos seus dados</h1>
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <label for="csv">Selecione o arquivo CSV:</label>
+        <input id="csv" name="csv" type="file" accept=".csv,text/csv" required>
+        <button type="submit">Enviar</button>
+</form>
+{% endblock %}
