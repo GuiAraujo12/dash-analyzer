@@ -7,4 +7,13 @@
         Valores Nulos: {{ resultado.valores_nulos }}<br/>
         Linhas Duplicadas: {{ resultado.valores_duplicados }}<br/>
     </p>
+
+    <h2>Graficos Gerados:</h2>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%;">
+        {% for grafico in resultado.graficos_html %}
+            <div style="width: 80%; max-width: 900px; background-color: white; border-radius: 8px; padding: 10px;">
+                {{ grafico | safe }}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
