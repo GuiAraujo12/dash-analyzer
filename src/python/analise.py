@@ -5,14 +5,10 @@ def executar_analise(arquivo):
     df_ini = pd.read_csv(arquivo)
 
     #save values before cleaning and dataframe after cleaning
-    df, nulos, duplicados, linhas, colunas = limpar_dados(df_ini)
+    df = limpar_dados(df_ini)
 
     #create "dados"
     dados = {
-        "total_linhas": linhas,
-        "total_colunas": colunas,
-        "valores_nulos": nulos,
-        "valores_duplicados": duplicados,
         "graficos_html": []
     }
 
@@ -43,19 +39,12 @@ def executar_analise(arquivo):
     return dados
 
 def limpar_dados(df):
-    #save values initials
-
-    linhas = len(df)
-    colunas = len(df.columns)
-    nulos = int(df.isnull().sum().sum())
-    duplicadas = int(df.duplicated().sum())
-
     #cleaning values: duplicates and nulls
     df.drop_duplicates(inplace=True)
     df.dropna(axis=1, how='all', inplace=True)
     df.dropna(axis=0, how='all', inplace=True)
 
-    return df, nulos, duplicadas, linhas, colunas
+    return df
 
 def calcularZscore(coluna_series):
     media = coluna_series.mean()
