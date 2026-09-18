@@ -12,7 +12,12 @@
     <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%;">
         {% for grafico in resultado.graficos_html %}
             <div style="width: 80%; max-width: 900px; background-color: white; border-radius: 8px; padding: 10px;">
-                {{ grafico | safe }}
+                {% if grafico['alerta'] == 1 %}
+                    <div class="alerta-vermelho">
+                        <p style="color: red; font-weight: bold;">Atenção: Os dados desta coluna possuem grande variação em relação a média!</p>
+                    </div>
+                {% endif %}
+                {{ grafico['conteudo'] | safe }}
             </div>
         {% endfor %}
     </div>

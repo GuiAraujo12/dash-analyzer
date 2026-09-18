@@ -22,20 +22,23 @@ def executar_analise(arquivo):
 
         #column type numeric
         if pd.api.types.is_numeric_dtype(tipo):
-            fig = px.histogram(df, x=coluna, title=f'Distribuição de {coluna}', marginal="box")
+            figura = px.histogram(df, x=coluna, title=f'Distribuição de {coluna}', marginal="box")
+            zscore = calcularZscore(df[coluna])
+            valor = 0
+            if(zscore > 2).any(): valor = 1
 
-            html_fig = fig.to_html(full_html=False, include_plotlyjs='cdn')
-            dados["graficos_html"].append(html_fig)
+            html_figura = {"conteudo" : figura.to_html(full_html=False, include_plotlyjs='cdn'), "alerta" : valor}
+            dados["graficos_html"].append(html_figura)
 
         #column type string or object
         elif pd.api.types.is_string_dtype(tipo) or pd.api.types.is_object_dtype(tipo):
             if df[coluna].nunique() < 20:
                 contagem = df[coluna].value_counts().reset_index()
                 contagem.columns = [coluna, 'Contagem']
-                fig = px.bar(contagem, x=coluna, y='Contagem', title=f'Frequência de {coluna}', color=coluna)
+                figura = px.bar(contagem, x=coluna, y='Contagem', title=f'Frequência de {coluna}', color=coluna)
                 
-                html_fig = fig.to_html(full_html=False, include_plotlyjs='cdn')
-                dados["graficos_html"].append(html_fig)
+                html_figura= { "conteudo" : figura.to_html(full_html=False, include_plotlyjs='cdn'), "alerta" : 0}
+                dados["graficos_html"].append(html_figura)
 
     return dados
 
@@ -47,11 +50,22 @@ def limpar_dados(df):
     nulos = int(df.isnull().sum().sum())
     duplicadas = int(df.duplicated().sum())
 
-    #cleaning values: duplicates, nulls
+    #cleaning values: duplicates and nulls
     df.drop_duplicates(inplace=True)
     df.dropna(axis=1, how='all', inplace=True)
     df.dropna(axis=0, how='all', inplace=True)
 
     return df, nulos, duplicadas, linhas, colunas
+
+def calcularZscore(coluna_series):
+    media = coluna_series.mean()
+    desvio_padrao = coluna_series.std(ddof=0)
+
+    if desvio_padrao == 0:
+        desvio_padrao = 1
+
+    return (coluna_series - media) / desvio_padrao
+
+
 
 
