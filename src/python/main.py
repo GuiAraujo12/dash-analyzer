@@ -13,20 +13,26 @@ def inicio():
 
 @app.route("/upload", methods=["POST"])
 def upload():
+    global csv_txt
     arquivo = request.files["csv"]
-    csv_txt = arquivo.read().decode("utf-8")
+    linhas = arquivo.read().decode("utf-8").splitlines()
+    csv_txt = "\n".join(linhas[:50])
+    arquivo.seek(0)
     resultado = analise.executar_analise(arquivo)
     return render_template("resultado.html", resultado=resultado)
 
 @app.route("/ia")
 def ia():
-    result = iaanalise.analisa_arq(csv_txt)
+    global csv_txt
+    result = iaanalise.executar_ia(csv_txt)
     return render_template("ia.html", result=result)
 
 @app.route("/salvar")
 def salvar():
     prompt = request.form.get('texto_label')
-    return render_template()
+    response = iaanalise.enviar_msg(prompt)
+    return render_template("ia.html", result=response)
+    
 
 if __name__ == "__main__":
     app.run(debug = True)

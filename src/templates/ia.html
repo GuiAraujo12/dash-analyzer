@@ -2,9 +2,12 @@
 
 {% block conteudo %}
 <h1>ANÁLISE IA</h1>
+<div style="white-space: pre-line; line-height: 1.6;">
+    {{ result }}
+</div>
 <form action="/salvar" method="POST">
     <label for="prompt">Pergunte sobre a análise de ia</label>
-    <input type="prompt" id="prompt" name="prompt">
+    <input   type="prompt" id="prompt" name="prompt">
     <input type="hidden" name="texto_label" value="ANÁLISE_IA">
     <button type="submit">Enviar</button>
 </form>
