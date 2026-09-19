@@ -6,7 +6,7 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 config = {"max_output_tokens": 1500}
-model = genai.GenerativeModel("gemini-2.5-flash", generation_config=config)
+model = genai.GenerativeModel("gemini-3.6-flash", generation_config=config)
 chat_session = None
 
 

@@ -3,7 +3,7 @@
     <h2>Graficos Gerados:</h2>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%;">
         {% for grafico in resultado.graficos_html %}
-            <div style="width: 80%; max-width: 900px; background-color: white; border-radius: 8px; padding: 10px;">
+            <div style="width: 80%; max-width: 900px; background-color: #121212; border-radius: 8px; padding: 10px;">
                 {% if grafico['alerta'] == 1 %}
                     <div class="alerta-vermelho">
                         <p style="color: red; font-weight: bold;">Atenção: Os dados desta coluna possuem grande variação em relação a média!</p>
@@ -29,7 +29,7 @@
         }
 
         button:hover {
-            background-color: #000000;
+            background-color: #0b003e;
         }
     </style>
     </div>

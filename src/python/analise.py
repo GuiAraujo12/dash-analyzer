@@ -19,6 +19,9 @@ def executar_analise(arquivo):
         #column type numeric
         if pd.api.types.is_numeric_dtype(tipo):
             figura = px.histogram(df, x=coluna, title=f'Distribuição de {coluna}', marginal="box")
+
+            aplicar_tema_escuro(figura)
+
             zscore = calcularZscore(df[coluna])
             valor = 0
             if(zscore > 2).any(): valor = 1
@@ -32,7 +35,9 @@ def executar_analise(arquivo):
                 contagem = df[coluna].value_counts().reset_index()
                 contagem.columns = [coluna, 'Contagem']
                 figura = px.bar(contagem, x=coluna, y='Contagem', title=f'Frequência de {coluna}', color=coluna)
-                
+
+                aplicar_tema_escuro(figura)
+
                 html_figura= { "conteudo" : figura.to_html(full_html=False, include_plotlyjs='cdn'), "alerta" : 0}
                 dados["graficos_html"].append(html_figura)
 
@@ -45,6 +50,16 @@ def limpar_dados(df):
     df.dropna(axis=0, how='all', inplace=True)
 
     return df
+
+def aplicar_tema_escuro(figura):
+    figura.update_layout(
+        paper_bgcolor='#121212',
+        plot_bgcolor='#0f172a',
+        font=dict(color='#f8fafc'), 
+        xaxis=dict(gridcolor='#334155', zerolinecolor='#334155'),
+        yaxis=dict(gridcolor='#334155', zerolinecolor='#334155')
+    )
+    return figura
 
 def calcularZscore(coluna_series):
     media = coluna_series.mean()
