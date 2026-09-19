@@ -1,14 +1,121 @@
-{% extends 'base.html'  %}
+{% extends 'base.html' %}
 
 {% block conteudo %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <h1>ANÁLISE IA</h1>
-<div style="white-space: pre-line; line-height: 1.6;">
-    {{ result }}
+
+<div id="resposta-formatada" class="chat-response"></div>
+<template id="texto-bruto">{{ result }}</template>
+
+<script>
+    const conteudo = document.getElementById('texto-bruto').innerHTML;
+    if (conteudo.trim()) {
+        document.getElementById('resposta-formatada').innerHTML = marked.parse(conteudo);
+    }
+</script>
+
+<div class="chat-input-container">
+    <form action="/salvar" method="POST" class="chat-form">
+        <input 
+            type="text" 
+            id="prompt" 
+            name="texto_label" 
+            placeholder="Pergunte sobre a análise da IA..." 
+            autocomplete="off"
+            required
+            >
+        <button type="submit" class="btn-enviar">Enviar</button>
+    </form>
 </div>
-<form action="/salvar" method="POST">
-    <label for="prompt">Pergunte sobre a análise de ia</label>
-    <input   type="prompt" id="prompt" name="prompt">
-    <input type="hidden" name="texto_label" value="ANÁLISE_IA">
-    <button type="submit">Enviar</button>
-</form>
+
+<style>
+    .chat-input-container {
+    position: sticky;
+    bottom: 20px;
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto 0 auto;
+    }
+
+    .chat-form {
+    display: flex;
+    align-items: center;
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 4px 8px 4px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s ease;
+    }
+
+    .chat-form:focus-within {
+    border-color: #3b82f6;
+    }
+
+    .chat-form input[type="text"] {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: #f8fafc;
+        font-size: 15px;
+        padding: 12px 0;
+    }
+
+    .chat-form input[type="text"]::placeholder {
+        color: #94a3b8;
+    }
+
+    .btn-enviar {
+        background-color: #2563eb;
+        color: #ffffff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        margin-left: 10px;
+    }
+
+    .btn-enviar:hover {
+        background-color: #1d4ed8;
+    }
+
+    .chat-response {
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        color: #d2dae8;
+        max-width: 900px;
+    }
+
+    .chat-response table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+    }
+
+    .chat-response th,
+    .chat-response td {
+        border: 1px solid #e2e8f0;
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    .chat-response th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+    }
+
+    .chat-response h3,
+    .chat-response h4 {
+        color: #ebf1ff;
+        margin-top: 20px;
+    }
+
+    .chat-response ul {
+        padding-left: 20px;
+    }
+</style>
 {% endblock %}
