@@ -2,17 +2,16 @@
 
 {% block conteudo %}
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<h1>ANÁLISE IA</h1>
+<h1>ANÁLISE DO CSV</h1>
 
 <div id="resposta-formatada" class="chat-response"></div>
 <template id="texto-bruto">{{ result }}</template>
 
-<script>
-    const conteudo = document.getElementById('texto-bruto').innerHTML;
-    if (conteudo.trim()) {
-        document.getElementById('resposta-formatada').innerHTML = marked.parse(conteudo);
-    }
-</script>
+<div id="loading" class="loading-animation-container" style="display: none;">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+</div>
 
 <div class="chat-input-container">
     <form action="/salvar" method="POST" class="chat-form">
@@ -28,9 +27,58 @@
     </form>
 </div>
 
+
+
+<script>
+    const conteudo = document.getElementById('texto-bruto').innerHTML;
+    if (conteudo.trim()) {
+        document.getElementById('resposta-formatada').innerHTML = marked.parse(conteudo);
+    }
+
+    document.querySelector('.chat-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const inputTexto = document.getElementById('prompt');
+    const mensagem = inputTexto.value;
+
+    if (!mensagem.trim()) return;
+
+    inputTexto.value = '';
+
+    const chat = document.getElementById('resposta-formatada');
+
+    const balaoUsuario = document.createElement('div');
+    balaoUsuario.className = 'mensagem-usuario';
+    balaoUsuario.textContent = mensagem;
+    chat.appendChild(balaoUsuario);
+
+    const loadingDiv = document.getElementById('loading');
+    loadingDiv.style.display = 'flex';
+    chat.appendChild(loadingDiv);   
+
+    fetch('/salvar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ 'texto_label': mensagem })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        loadingDiv.style.display = 'none';
+
+        const balaoIA = document.createElement('div');
+        balaoIA.className = 'mensagem-ia';
+        balaoIA.innerHTML = marked.parse(data.resposta);
+        chat.appendChild(balaoIA);
+    });
+});
+</script>
+
 <style>
     .chat-input-container {
-    position: sticky;
+    position: sticky;   
     bottom: 20px;
     width: 100%;
     max-width: 900px;
@@ -116,6 +164,75 @@
 
     .chat-response ul {
         padding-left: 20px;
+    }
+
+    #resposta-formatada {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    }
+
+    .mensagem-usuario {
+        align-self: flex-end;
+        background-color: #2b5278;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 10px 10px 0 10px;
+        max-width: 70%;
+    }
+
+    .mensagem-ia {
+        align-self: flex-start;
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        padding: 10px 14px;
+        border-radius: 10px 10px 10px 0;
+        max-width: 70%;
+    }
+
+    .loading-animation-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 50px;
+    }
+
+    @keyframes bounce {
+    25% {
+        transform: translateY(-25px);
+    }
+    75% {
+        transform: translateY(5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+    }
+
+    .loading-animation-container > .dot {
+    width: 8px;
+    height: 8px;/*
+    background-color: rgba(251, 140, 0, 1); */
+    background-color: #009688;
+    margin: 0 4px 0 0;
+    border-radius: 50%;
+    animation-name: bounce;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    }
+
+    .loading-animation-container > .dot:nth-child(2) {
+    animation-delay: .25s;
+    }
+
+    .loading-animation-container > .dot:nth-child(3) {
+    animation-delay: .51s;
+    }
+
+    .loading-animation-container > .dot:nth-of-type(2n) {
+    background-color: #ad1457;
     }
 </style>
 {% endblock %}

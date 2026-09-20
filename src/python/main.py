@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import jsonify
 import analise
 import iaanalise
 
@@ -31,7 +32,7 @@ def ia():
 def salvar():
     prompt = request.form.get('texto_label')
     response = iaanalise.enviar_msg(prompt)
-    return render_template("ia.html", result=response)
+    return jsonify({"resposta": response})
     
 
 if __name__ == "__main__":
