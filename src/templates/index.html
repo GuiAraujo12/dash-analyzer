@@ -1,11 +1,12 @@
-{% extends 'base.html'  %}
+{% extends 'base.html' %}
 
 {% block conteudo %}
 <h1>PROJETO ANÁLISE DE DADOS</h1>
-<h3>O projeto consiste em um analisador visual e textual de csv, contêm a integração de uma api, para conversação sobre seu arquivo enviado, além de gráficos para melhor visualisação dos dados!!</h3>
+<h3>O projeto consiste em um analisador visual e textual de csv, contêm a integração de uma api, para conversação sobre
+    seu arquivo enviado, além de gráficos para melhor visualisação dos dados!!</h3>
 <form action="/upload" method="post" enctype="multipart/form-data">
     <label for="csv">Selecione o arquivo CSV:</label>
-        <input id="csv" name="csv" type="file" accept=".csv,text/csv" required>
-        <button type="submit">Enviar</button>
+    <input id="csv" name="csv" type="file" accept=".csv,text/csv" required>
+    <button type="submit">Enviar</button>
 </form>
 {% endblock %}
