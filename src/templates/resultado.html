@@ -8,7 +8,7 @@
         align-items: center;
         width: 100%;
         padding: 40px 20px;
-        color: #ffffff;
+        color: #3b82f6;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         box-sizing: border-box;
     }
@@ -18,7 +18,7 @@
         font-weight: 700;
         letter-spacing: 1px;
         margin-bottom: 32px;
-        color: #ffffff;
+        color: #3b82f6;
         text-align: center;
     }
 
@@ -87,9 +87,9 @@
     <div class="charts-wrapper">
         {% for grafico in resultado.graficos_html %}
         <div class="chart-card">
-            {% if grafico['alerta'] == 1 %}
+            {% if grafico.alerta %}
             <div class="alerta-vermelho">
-                <p>Atenção: Os dados desta coluna possuem grande variação em relação à média!</p>
+                <p>{{ grafico.alerta }}</p>
             </div>
             {% endif %}
             {{ grafico['conteudo'] | safe }}
