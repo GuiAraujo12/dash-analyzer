@@ -1,12 +1,106 @@
 {% extends 'base.html' %}
 
 {% block conteudo %}
-<h1>PROJETO ANÁLISE DE DADOS</h1>
-<h3>O projeto consiste em um analisador visual e textual de csv, contêm a integração de uma api, para conversação sobre
-    seu arquivo enviado, além de gráficos para melhor visualisação dos dados!!</h3>
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <label for="csv">Selecione o arquivo CSV:</label>
-    <input id="csv" name="csv" type="file" accept=".csv,text/csv" required>
-    <button type="submit">Enviar</button>
-</form>
+<style>
+    .analyzer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        text-align: center;
+        padding: 20px;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .analyzer-container h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+    }
+
+    .analyzer-container h1 span {
+        color: #3b82f6;
+    }
+
+    .analyzer-container h3 {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #a0a0a0;
+        max-width: 600px;
+        line-height: 1.5;
+        margin-bottom: 32px;
+    }
+
+    .upload-card {
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .upload-card label {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #e0e0e0;
+        text-align: left;
+    }
+
+    .upload-card input[type="file"] {
+        background-color: #121212;
+        color: #a0a0a0;
+        padding: 10px;
+        border: 1px dashed #3b82f6;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 0.9rem;
+        transition: border-color 0.2s;
+    }
+
+    .upload-card input[type="file"]:hover {
+        border-color: #2563eb;
+    }
+
+    .upload-card button[type="submit"] {
+        background-color: #3b82f6;
+        color: #ffffff;
+        border: none;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .upload-card button[type="submit"]:hover {
+        background-color: #2563eb;
+    }
+
+    .upload-card button[type="submit"]:active {
+        transform: scale(0.98);
+    }
+</style>
+
+<div class="analyzer-container">
+    <h1>PROJETO <span>ANÁLISE DE DADOS</span></h1>
+    
+    <h3>O projeto consiste em um analisador visual e textual de csv, contêm a integração de uma api, para conversação sobre seu arquivo enviado, além de gráficos para melhor visualização dos dados!!</h3>
+
+    <form action="/upload" method="post" enctype="multipart/form-data" class="upload-card">
+        <label for="csv">Selecione o arquivo CSV:</label>
+        <input id="csv" name="csv" type="file" accept=".csv,text/csv" required>
+        <button type="submit">Enviar</button>
+    </form>
+</div>
 {% endblock %}

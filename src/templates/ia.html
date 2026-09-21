@@ -9,8 +9,14 @@
 
 <h1>ANÁLISE DO CSV</h1>
 
-<div id="resposta-formatada" class="chat-response"></div>
-<template id="texto-bruto">{{ result }}</template>
+<div class="messages-wrapper"
+    style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 900px; margin: 0 auto 30px auto;">
+    <div class="message-ai"
+        style="background-color: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; width: 100%; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);">
+        <div id="resposta-formatada" class="chat-response"></div>
+        <template id="texto-bruto">{{ result }}</template>
+    </div>
+</div>
 
 <div id="loading" class="loading-animation-container" style="display: none;">
     <div class="dot"></div>

@@ -1,37 +1,104 @@
 {% extends 'base.html' %}
+
 {% block conteudo %}
-<h2>Graficos Gerados:</h2>
-<div style="display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%;">
-    {% for grafico in resultado.graficos_html %}
-    <div style="width: 80%; max-width: 900px; background-color: #121212; border-radius: 8px; padding: 10px;">
-        {% if grafico['alerta'] == 1 %}
-        <div class="alerta-vermelho">
-            <p style="color: red; font-weight: bold;">Atenção: Os dados desta coluna possuem grande variação em relação
-                a média!</p>
+<style>
+    .results-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 40px 20px;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        box-sizing: border-box;
+    }
+
+    .results-container>h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 32px;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .charts-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+        max-width: 900px;
+        margin-bottom: 32px;
+    }
+
+    .chart-card {
+        width: 100%;
+        background-color: #1a1a1a;
+        border: 1px solid #2a2a2a;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        box-sizing: border-box;
+    }
+
+    .alerta-vermelho {
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid #ef4444;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+    }
+
+    .alerta-vermelho p {
+        color: #ef4444;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .ia-btn {
+        background-color: #3b82f6;
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .ia-btn:hover {
+        background-color: #2563eb;
+    }
+
+    .ia-btn:active {
+        transform: scale(0.98);
+    }
+</style>
+
+<div class="results-container">
+    <h2>Gráficos Gerados</h2>
+
+    <div class="charts-wrapper">
+        {% for grafico in resultado.graficos_html %}
+        <div class="chart-card">
+            {% if grafico['alerta'] == 1 %}
+            <div class="alerta-vermelho">
+                <p>Atenção: Os dados desta coluna possuem grande variação em relação à média!</p>
+            </div>
+            {% endif %}
+            {{ grafico['conteudo'] | safe }}
         </div>
-        {% endif %}
-        {{ grafico['conteudo'] | safe }}
+        {% endfor %}
     </div>
-    {% endfor %}
+
     <form action="/ia">
-        <button>ANÁLISE IA</button>
+        <button type="submit" class="ia-btn">ANÁLISE IA</button>
     </form>
-
-    <style>
-        button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-family: sans-serif;
-        }
-
-        button:hover {
-            background-color: #0b003e;
-        }
-    </style>
 </div>
 {% endblock %}
