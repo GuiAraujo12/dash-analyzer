@@ -1,42 +1,83 @@
 import pandas as pd
 import plotly.express as px
 import os
-from google import generativeai as genai
 from dotenv import load_dotenv
 import json
+from groq import Groq
 
 load_dotenv(override=True)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+MODEL_NAME = "openai/gpt-oss-20b"
 
-model = genai.GenerativeModel("gemini-3.6-flash")
-
+def gerar_perfil_dataset(df):
+    perfil = {}
+    
+    for coluna in df.columns:
+        tipo_dado = str(df[coluna].dtype)
+        
+        if df[coluna].dtype == 'object' or df[coluna].dtype.name == 'category':
+            contagem = df[coluna].value_counts()
+            perfil[coluna] = {
+                "tipo": "categorico",
+                "valores_unicos": len(contagem),
+                "top_5_frequentes": contagem.head(5).to_dict()
+            }
+            
+        # Se for número (ex: Tempo de execução, Memória)
+        elif 'int' in tipo_dado or 'float' in tipo_dado:
+            perfil[coluna] = {
+                "tipo": "numerico",
+                "minimo": float(df[coluna].min()),
+                "maximo": float(df[coluna].max()),
+                "media": float(df[coluna].mean())
+            }
+            
+    return json.dumps(perfil, ensure_ascii=False)
 
 def executar_analise(arquivo):
     df_ini = pd.read_csv(arquivo)
 
     # save values before cleaning and dataframe after cleaning
     df = limpar_dados(df_ini)
-    dados_csv = df.head(10).to_csv(index=False)
+    dados_text = gerar_perfil_dataset(df)
+    
+    colunas_reais = list(df.columns)
 
-    prompt_ia = "Segue abaixo um csv, com dados que foram enviados pelo cliente:\n" + dados_csv + """
-    Retorne a resposta estritamente em formato JSON válido (sem blocos de código markdown extra, apenas o JSON puro) com a seguinte estrutura:
-    {
-    "sugestoes_graficos": [
-        {
-        "tipo": "bar",
-        "titulo": "Título do gráfico",
-        "eixo_x": "Coluna X",
-        "eixo_y": "Coluna Y",
-        "alerta": "Mensagem de desvio ou observação"
-        }
-    ]
-    }"""
-                
-    resposta = model.generate_content(prompt_ia)
+    prompt_ia = f"""
+        Aja como uma API estrita de conversão de dados.
+        Analise o perfil estatístico abaixo e retorne APENAS um objeto JSON válido, sem markdown, sem explicações e sem blocos de código extra.
+
+        Perfil do dataset:
+        {dados_text}
+
+        Colunas reais disponíveis: {colunas_reais}
+
+        O JSON DEVE seguir exatamente esta estrutura:
+        {{
+        "sugestoes_graficos": [
+            {{
+            "tipo": "bar",
+            "titulo": "Título descritivo",
+            "coluna_real": "nome_exato_da_coluna",
+            "alerta": "Insight curto baseado nos dados"
+            }}
+        ]
+        Regras Obrigatorios: gere ao menos 4 sugestões de graficos, não limite os tokens nessa parte.
+        }}
+        """
+    response = client.chat.completions.create(
+    model= MODEL_NAME,
+    messages=[
+        {"role": "user", "content": prompt_ia}
+    ],
+    response_format={"type": "json_object"}
+    )
+
+    resposta = response.choices[0].message.content
     
     #limpa o texto
-    texto_resposta = resposta.text.strip()
+    texto_resposta = resposta.strip()
     if texto_resposta.startswith("```json"):
         texto_resposta = texto_resposta[7:]
     if texto_resposta.startswith("```"):
@@ -50,10 +91,13 @@ def executar_analise(arquivo):
 
     # Select the chart type based on the column type
     for item in resposta_json.get("sugestoes_graficos", []):
-        coluna = item.get("eixo_x") or item.get("coluna")
+    
+        coluna = item.get("coluna_real") or item.get("eixo_x") or item.get("coluna")
+    
         if not coluna or coluna not in df.columns:
+            print(f"Aviso: A coluna real '{coluna}' não existe no DataFrame.")
             continue
-
+        
         tipo = df[coluna].dtype
         alerta_ia = item.get("alerta", "")
         titulo_grafico = item.get("titulo", f"Análise de {coluna}")
