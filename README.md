@@ -52,8 +52,8 @@ A inteligência artificial usa os resumos criados pela aplicação para sugerir 
 ## Próximos passos
 
 - Gerar DashBoard final, para download, PowerBI.
-- Aceitar arquivos Excel (`.xlsx` e `.xls`) além de CSV.
 - Melhorar o tratamento de arquivos muito grandes para manter a análise rápida e estável.
+- Tratar erros e atualizações pontuais no HTML.
 
 ## Como instalar e executar
 
