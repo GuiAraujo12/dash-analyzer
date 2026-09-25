@@ -1,2 +1,5 @@
 .env
 teste.py
+.vscode
+__pycache__/
+*.py[cod]

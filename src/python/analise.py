@@ -63,8 +63,8 @@ def executar_analise(arquivo):
             "alerta": "Insight curto baseado nos dados"
             }}
         ]
-        Regras Obrigatorios: gere ao menos 4 sugestões de graficos, não limite os tokens nessa parte.
-        }}
+        Regras Obrigatorios: gere ao menos 4 a 8 sugestões de graficos, não limite os tokens nessa parte.
+        }} 
         """
     response = client.chat.completions.create(
     model= MODEL_NAME,
