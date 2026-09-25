@@ -54,6 +54,8 @@ A inteligência artificial usa os resumos criados pela aplicação para sugerir 
 - Gerar DashBoard final, para download, PowerBI.
 - Melhorar o tratamento de arquivos muito grandes para manter a análise rápida e estável.
 - Tratar erros e atualizações pontuais no HTML.
+- Usar o arquivo salvo na cache por usuario(retirar a variavel global)
+- Fazer a Busca no csv por palavras chaves e contextos parecidos.
 
 ## Como instalar e executar
 
