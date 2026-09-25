@@ -25,7 +25,7 @@ def upload():
     
     if arquivo.filename.endswith(".csv"):
         linhas = arquivo.read().decode("utf-8").splitlines()
-        csv_txt = "\n".join(linhas[:20])
+        csv_txt = "\n".join(linhas[:100])
     elif arquivo.filename.endswith(".xlsx"):
         import pandas as pd
         df_temp = pd.read_excel(arquivo, engine="openpyxl", nrows=20)
